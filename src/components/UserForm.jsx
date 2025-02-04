@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from '../slice/UserSlice';
 import { v4 as uuidv4 } from 'uuid';
+import { TextField, Button, Box, Typography, Container } from '@mui/material';
 
 const UserForm = () => {
   const dispatch = useDispatch();
@@ -24,43 +25,72 @@ const UserForm = () => {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [formData]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     dispatch(updateUser(formData));
     alert('Data Saved!');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={formData.name}
-        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        placeholder="Name"
-        required
-      />
-      <input
-        type="text"
-        value={formData.address}
-        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-        placeholder="Address"
-        required
-      />
-      <input
-        type="email"
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="tel"
-        value={formData.phone}
-        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-        placeholder="Phone"
-        required
-      />
-      <button type="submit">Save</button>
-    </form>
+    <Container maxWidth="sm">
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ p: 3, boxShadow: 3, borderRadius: 2, backgroundColor: '#fff' }}
+      >
+        <Typography variant="h5" gutterBottom>
+          User Information
+        </Typography>
+        <TextField
+          fullWidth
+          label="Name"
+          variant="outlined"
+          margin="normal"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          required
+        />
+        <TextField
+          fullWidth
+          label="Address"
+          variant="outlined"
+          margin="normal"
+          value={formData.address}
+          onChange={(e) =>
+            setFormData({ ...formData, address: e.target.value })
+          }
+          required
+        />
+        <TextField
+          fullWidth
+          label="Email"
+          variant="outlined"
+          margin="normal"
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          required
+        />
+        <TextField
+          fullWidth
+          label="Phone"
+          variant="outlined"
+          margin="normal"
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          required
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+        >
+          Save
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

@@ -1,40 +1,27 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { increment, decrement, reset } from '../slice/CounterSlice.js';
-import { Button, Box, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { animated, useSpring } from 'react-spring';
 
 const Counter = () => {
-  const count = useSelector((state) => state.counter.value);
-  const dispatch = useDispatch();
+  const [count, setCount] = useState(() => {
+    return Number(localStorage.getItem('count')) || 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('count', count.toString());
+  }, [count]);
+
+  const bgColor = useSpring({
+    backgroundColor: `rgba(0, 0, 255, ${count / 100})`,
+    config: { tension: 120, friction: 14 },
+  });
 
   return (
-    <Box textAlign="center" p={3} border="1px solid #ddd" borderRadius={2}>
-      <Typography variant="h5">Counter: {count}</Typography>
-      <Box mt={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => dispatch(increment())}
-          sx={{ mr: 1 }}
-        >
-          Increment
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => dispatch(decrement())}
-          sx={{ mr: 1 }}
-        >
-          Decrement
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => dispatch(reset())}
-        >
-          Reset
-        </Button>
-      </Box>
-    </Box>
+    <animated.div style={{ ...bgColor, padding: '20px', textAlign: 'center' }}>
+      <h2>Counter: {count}</h2>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={() => setCount(count - 1)}>Decrement</button>
+      <button onClick={() => setCount(0)}>Reset</button>
+    </animated.div>
   );
 };
 
